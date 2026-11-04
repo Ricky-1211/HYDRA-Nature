@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  }
+
+  h1, h2, h3, .font-serif {
+    font-family: 'Playfair Display', Georgia, serif;
+  }
+}
+
+/* Luxury transitions & scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #FAF8F5;
+}
+::-webkit-scrollbar-thumb {
+  background: #C5A880;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #13382B;
+}
+
+.text-gold {
+  color: #C5A880;
+}
+
+.bg-gold {
+  background-color: #C5A880;
+}
+
+.border-gold {
+  border-color: #C5A880;
+}
+
+/* Glass & Card Effects */
+.luxury-card {
+  background: #FFFFFF;
+  border: 1px solid rgba(220, 215, 205, 0.6);
+  border-radius: 1rem;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.luxury-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 35px -10px rgba(19, 56, 43, 0.1);
+  border-color: rgba(197, 168, 128, 0.6);
+}
