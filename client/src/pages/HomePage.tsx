@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight,
@@ -11,6 +11,7 @@ import {
   ShieldCheck,
   Sparkles,
   Image as ImageIcon,
+  Search,
 } from 'lucide-react';
 import {
   NaturalIngredientsIcon,
@@ -221,7 +222,7 @@ export const HomePage: React.FC = () => {
 
             <div className="relative min-h-[320px] overflow-hidden sm:min-h-[420px] lg:min-h-[620px]">
               <img
-                src="/images/home/care_model.jpg"
+                src="/images/home/care_model.png"
                 alt="Woman enjoying a gentle skincare ritual"
                 className="absolute inset-0 h-full w-full object-cover object-center"
                 loading="lazy"
@@ -279,13 +280,14 @@ export const HomePage: React.FC = () => {
               return (
                 <div
                   key={product._id}
-                  className="bg-white rounded-2xl p-4 sm:p-5 border border-[#EDE8E1] hover:border-[#C5A880]/50 shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_28px_rgba(19,56,43,0.08)] transition-all duration-300 flex flex-col justify-between group"
+                  className="bg-white rounded-2xl overflow-hidden border border-[#EDE8E1] hover:border-[#C5A880]/60 shadow-[0_2px_12px_rgba(0,0,0,0.04)] hover:shadow-[0_16px_40px_rgba(19,56,43,0.10)] transition-all duration-300 flex flex-col group"
                 >
-                  {/* Top Bar: Pill Tag & Wishlist Heart */}
-                  <div className="flex items-center justify-between mb-2">
-                    {productBadge ? (
+                  {/* ── Image Block ── */}
+                  <div className="relative overflow-hidden">
+                    {/* Badge */}
+                    {productBadge && (
                       <span
-                        className={`text-[10px] sm:text-[11px] font-semibold px-2.5 py-0.5 rounded-full text-white ${
+                        className={`absolute top-3 left-3 z-10 text-[10px] font-semibold px-2.5 py-0.5 rounded-full text-white ${
                           productBadge === 'Best Seller'
                             ? 'bg-[#8CA448]'
                             : productBadge === 'New'
@@ -297,87 +299,95 @@ export const HomePage: React.FC = () => {
                       >
                         {productBadge}
                       </span>
-                    ) : (
-                      <span />
                     )}
 
+                    {/* Wishlist Heart */}
                     <button
                       onClick={(e) => handleToggleWishlist(e, product)}
                       aria-label={isInWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
-                      className="w-8 h-8 rounded-full border border-[#EDE8E1] flex items-center justify-center text-[#708078] hover:text-[#B91C1C] hover:border-[#B91C1C]/30 transition-all bg-white"
+                      className="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm border border-[#EDE8E1] flex items-center justify-center text-[#708078] hover:text-[#B91C1C] hover:border-[#B91C1C]/30 transition-all shadow-sm"
                     >
                       <Heart
-                        className={`w-4 h-4 transition-transform active:scale-125 ${
+                        className={`w-3.5 h-3.5 transition-transform active:scale-125 ${
                           isInWishlist ? 'fill-[#B91C1C] text-[#B91C1C]' : 'stroke-current'
                         }`}
                       />
                     </button>
-                  </div>
 
-                  {/* Product Packshot Image */}
-                  <Link
-                    to={`/shop/${product.slug || product._id}`}
-                    className="relative my-2 aspect-square rounded-xl overflow-hidden bg-gradient-to-b from-[#FAF8F5] to-[#F1ECE5]/50 p-2 flex items-center justify-center"
-                  >
-                    {!product.images?.[0] && (
-                      <div className="flex flex-col items-center gap-2 text-[#9CAAA1]" aria-hidden="true">
-                        <ImageIcon className="h-8 w-8" />
-                        <span className="text-xs">Image unavailable</span>
+                    {/* Product Image — edge-to-edge, perfectly square */}
+                    <Link
+                      to={`/shop/${product.slug || product._id}`}
+                      className="relative block w-full overflow-hidden"
+                      style={{ paddingBottom: '100%' /* 1:1 square via padding trick */ }}
+                    >
+                      {/* Neutral background + fallback icon — always rendered beneath the image */}
+                      <div className="absolute inset-0 bg-gradient-to-b from-[#F5F2ED] to-[#EDE8E0] flex flex-col items-center justify-center gap-2 text-[#C5BEB5]">
+                        <ImageIcon className="h-10 w-10" />
+                        <span className="text-[11px]">Image unavailable</span>
                       </div>
-                    )}
-                    {product.images?.[0] && (
-                      <>
-                        <div
-                          className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-[#9CAAA1]"
-                          aria-hidden="true"
-                        >
-                          <ImageIcon className="h-8 w-8" />
-                          <span className="text-xs">Image unavailable</span>
-                        </div>
+
+                      {/* Actual product image — absolute fill so every card is identical size */}
+                      {product.images?.[0] && (
                         <img
                           src={getImageUrl(product.images[0])}
                           alt={product.name}
-                          className="relative h-full w-full object-contain group-hover:scale-105 transition-transform duration-500"
+                          className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                           onError={(e) => {
-                            (e.target as HTMLImageElement).style.visibility = 'hidden';
+                            (e.target as HTMLImageElement).style.display = 'none';
                           }}
                         />
-                      </>
-                    )}
-                  </Link>
+                      )}
 
-                  {/* Title & Subtitle */}
-                  <div className="pt-2">
-                    <Link to={`/shop/${product.slug || product._id}`} className="block">
-                      <h3 className="font-serif text-base font-semibold text-[#13382B] group-hover:text-[#2D634C] transition-colors leading-snug">
-                        {product.name}
-                      </h3>
-                      <p className="text-[11px] text-[#6E7F75] mt-0.5 font-sans line-clamp-1">{product.subtitle}</p>
-                    </Link>
-
-                    {/* Price and Cart Button */}
-                    <div className="mt-3 flex items-center justify-between">
-                      <div className="flex items-baseline gap-2">
-                        <span className="font-serif text-base font-bold text-[#13382B]">
-                          ₹{product.price.toLocaleString('en-IN')}
+                      {/* Quick-look zoom — fades in centered on hover */}
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/8 transition-colors duration-300 flex items-center justify-center pointer-events-none">
+                        <span className="w-10 h-10 rounded-full bg-white/95 shadow-md flex items-center justify-center opacity-0 scale-75 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300">
+                          <Search className="w-4 h-4 text-[#13382B]" />
                         </span>
-                        {hasDiscount && (
-                          <span className="text-xs text-[#9CAAA1] line-through font-sans">
-                            ₹{product.originalPrice.toLocaleString('en-IN')}
-                          </span>
-                        )}
                       </div>
 
-                      <button
-                        onClick={(e) => handleAddToCart(e, product)}
-                        aria-label={`Add ${product.name} to cart`}
-                        className={`w-9 h-9 rounded-full flex items-center justify-center text-white transition-all shadow-sm ${
-                          isAdded ? 'bg-[#2E6B48]' : 'bg-[#13382B] hover:bg-[#1E4D3B] hover:scale-105 active:scale-95'
-                        }`}
-                        title="Add to cart"
-                      >
-                        {isAdded ? <Check className="w-4 h-4 text-white" /> : <ShoppingBag className="w-4 h-4" />}
-                      </button>
+                      {/* ADD TO CART bar — slides up from the bottom edge on hover */}
+                      <div className="absolute bottom-0 left-0 right-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300 pointer-events-auto">
+                        <button
+                          onClick={(e) => handleAddToCart(e, product)}
+                          aria-label={`Add ${product.name} to cart`}
+                          className={`w-full py-3.5 text-[11px] font-bold tracking-[0.2em] uppercase flex items-center justify-center gap-2 transition-colors ${
+                            isAdded
+                              ? 'bg-[#2E6B48] text-white'
+                              : 'bg-[#8FB88A] hover:bg-[#13382B] text-white'
+                          }`}
+                        >
+                          {isAdded ? (
+                            <><Check className="w-3.5 h-3.5" /> Added</>
+                          ) : (
+                            <><ShoppingBag className="w-3.5 h-3.5" /> Add to Cart</>
+                          )}
+                        </button>
+                      </div>
+                    </Link>
+                  </div>
+
+                  {/* ── Info Block ── */}
+                  <div className="px-4 py-4 flex flex-col flex-1">
+                    <Link to={`/shop/${product.slug || product._id}`} className="block flex-1">
+                      <h3 className="font-serif text-sm sm:text-base font-semibold text-[#13382B] group-hover:text-[#2D634C] transition-colors leading-snug">
+                        {product.name}
+                      </h3>
+                      {product.subtitle && (
+                        <p className="text-[11px] text-[#6E7F75] mt-0.5 font-sans line-clamp-1">{product.subtitle}</p>
+                      )}
+                    </Link>
+
+                    {/* Price row */}
+                    <div className="mt-3 flex items-baseline gap-2">
+                      <span className="text-[10px] font-semibold uppercase tracking-widest text-[#9CAAA1]">MRP</span>
+                      <span className="font-serif text-base font-bold text-[#13382B]">
+                        ₹{product.price.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                      </span>
+                      {hasDiscount && (
+                        <span className="text-xs text-[#9CAAA1] line-through font-sans">
+                          ₹{product.originalPrice.toLocaleString('en-IN')}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -403,11 +413,11 @@ export const HomePage: React.FC = () => {
             <div className="order-first lg:order-first lg:col-span-5">
               <div className="relative mx-auto w-full max-w-[400px] px-4 sm:px-0">
                 <div
-                  className="absolute inset-0 translate-x-4 translate-y-4 rounded-t-[999px] rounded-b-[28px] border border-[#C5A880]/70"
+                  className="absolute inset-0 translate-x-4 translate-y-4 rounded-[28px] border border-[#C5A880]/70"
                   aria-hidden="true"
                 />
 
-                <div className="relative aspect-[4/5] overflow-hidden rounded-t-[999px] rounded-b-[28px] bg-white shadow-[0_30px_70px_-20px_rgba(8,27,46,0.25)] ring-1 ring-[#C5A880]/40">
+                <div className="relative aspect-[4/3] overflow-hidden rounded-[28px] bg-transparent ring-1 ring-[#C5A880]/40">
                   <img
                     src="/images/home/night_cream_hero.png"
                     alt="Hydra 24h Ultra Radiance Night Cream in a gold-capped white jar"

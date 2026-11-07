@@ -98,24 +98,11 @@ export const CartPage: React.FC = () => {
           {/* Left: Cart Items List */}
           <div className="lg:col-span-8 space-y-4">
             {/* Free Shipping Alert Banner */}
-            <div className="p-4 bg-[#EAF1EB] rounded-2xl border border-[#CCDED2]">
-              {subtotal >= 999 ? (
-                <p className="text-xs text-[#2E6B48] font-bold">
-                  🎉 Congratulations! Your order qualifies for FREE Express Shipping.
-                </p>
-              ) : (
-                <div>
-                  <p className="text-xs text-[#3F6352]">
-                    Add <strong>₹{999 - subtotal}</strong> more to get Free Express Shipping across India!
-                  </p>
-                  <div className="w-full bg-[#CCDED2] h-2 rounded-full mt-2 overflow-hidden">
-                    <div
-                      className="bg-[#2E6B48] h-full rounded-full transition-all"
-                      style={{ width: `${Math.min(100, (subtotal / 999) * 100)}%` }}
-                    />
-                  </div>
-                </div>
-              )}
+            <div className="p-4 bg-[#EAF1EB] rounded-2xl border border-[#CCDED2] flex items-center gap-2">
+              <span className="text-base">🎉</span>
+              <p className="text-xs text-[#2E6B48] font-bold">
+                Complimentary Express Courier Shipping & Zero GST included on all orders across India!
+              </p>
             </div>
 
             {/* Items Table/Cards */}
@@ -260,19 +247,17 @@ export const CartPage: React.FC = () => {
                     <span>-₹{discount.toLocaleString('en-IN')}</span>
                   </div>
                 )}
-                <div className="flex justify-between">
-                  <span>Estimated Shipping</span>
-                  <span>
-                    {shippingFee === 0 ? (
-                      <span className="text-emerald-700 font-bold">FREE</span>
-                    ) : (
-                      `₹${shippingFee}`
-                    )}
+                <div className="flex justify-between items-center">
+                  <span>Shipping Fee</span>
+                  <span className="text-emerald-700 font-bold bg-[#EAF1EB] px-2 py-0.5 rounded-full text-[11px]">
+                    FREE (All Orders)
                   </span>
                 </div>
-                <div className="flex justify-between">
-                  <span>Estimated GST (5%)</span>
-                  <span>₹{tax.toLocaleString('en-IN')}</span>
+                <div className="flex justify-between items-center">
+                  <span>GST (Inclusive)</span>
+                  <span className="text-emerald-700 font-semibold text-[11px]">
+                    Included in Price (₹0)
+                  </span>
                 </div>
 
                 <div className="flex justify-between text-base font-serif font-bold text-[#13382B] pt-3 border-t border-[#EDE8E1]">

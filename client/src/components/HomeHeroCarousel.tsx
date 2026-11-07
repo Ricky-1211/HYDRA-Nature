@@ -131,7 +131,8 @@ export const HomeHeroCarousel: React.FC = () => {
                   alt={slide.alt}
                   /* object-cover keeps the frame identical for every slide */
                   className="h-full w-full object-cover object-center"
-                  fetchPriority={active === 0 ? 'high' : undefined}
+                  loading={active === 0 ? 'eager' : 'lazy'}
+                  {...(active === 0 ? { fetchpriority: 'high' } : {})}
                   draggable={false}
                 />
               </Link>

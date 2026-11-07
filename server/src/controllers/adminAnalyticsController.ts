@@ -108,7 +108,7 @@ export const getAllCustomers = async (
 ): Promise<void> => {
   try {
     const customers = await User.find({ role: 'customer' })
-      .select('name email phone addresses createdAt avatar')
+      .select('name email phone')
       .sort({ createdAt: -1 });
 
     res.status(200).json({

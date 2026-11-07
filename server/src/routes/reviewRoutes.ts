@@ -3,13 +3,22 @@ import {
   getProductReviews,
   createReview,
   deleteReview,
+  getAllReviewsAdmin,
+  toggleApproveReview,
 } from '../controllers/reviewController';
-import { protect, authorize } from '../middleware/auth';
+import { protect, authorize, optionalAuth } from '../middleware/auth';
 
 const router = Router();
 
-router.get('/:productId', getProductReviews);
+// Admin review management routes (MUST come before /:productId to avoid route param collision)
+router.get('/admin', protect, authorize('admin'), getAllReviewsAdmin);
+router.patch('/:id/approve', protect, authorize('admin'), toggleApproveReview);
+
+// Delete review (Customer can delete their own review; Admin can delete any review)
+router.delete('/:id', protect, deleteReview);
+
+// Customer / Public review routes
 router.post('/:productId', protect, createReview);
-router.delete('/:id', protect, authorize('admin'), deleteReview);
+router.get('/:productId', optionalAuth, getProductReviews);
 
 export default router;

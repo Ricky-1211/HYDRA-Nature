@@ -82,7 +82,7 @@ export const Navbar: React.FC = () => {
   return (
     <header className="sticky top-0 z-40 w-full transition-all duration-300">
       {/* Top Botanical Announcement Bar */}
-      <div className="bg-[#13382B] text-[#FAF8F5] text-xs py-2 px-4 transition-all">
+      <div className="bg-[#3E5A3F] text-[#FAF8F5] text-xs py-2 px-4 transition-all">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="hidden sm:block text-[11px] tracking-wider text-[#A2B997]">
             NATURE • SCIENCE • RADIANCE

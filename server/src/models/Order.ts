@@ -28,13 +28,43 @@ export interface IOrder extends Document {
   couponCode?: string;
   tax: number;
   total: number;
-  status: 'Pending' | 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled';
+  status:
+    | 'ORDER_PLACED'
+    | 'ORDER_CONFIRMED'
+    | 'SHIPROCKET_CREATED'
+    | 'PICKUP_SCHEDULED'
+    | 'PICKED_UP'
+    | 'IN_TRANSIT'
+    | 'OUT_FOR_DELIVERY'
+    | 'DELIVERED'
+    | 'Pending'
+    | 'Processing'
+    | 'Shipped'
+    | 'Delivered'
+    | 'Cancelled';
   trackingNumber?: string;
   trackingHistory: {
     status: string;
     message: string;
     timestamp: Date;
   }[];
+  shiprocket?: {
+    shiprocketOrderId?: string;
+    shipmentId?: string;
+    awbCode?: string;
+    courierName?: string;
+    currentStatus?: string;
+    trackingUrl?: string;
+    etd?: string;
+    pickupScheduledDate?: string;
+    pickupTokenNumber?: string;
+    activities?: {
+      date: string;
+      status: string;
+      activity: string;
+      location: string;
+    }[];
+  };
   notes?: string;
   createdAt: Date;
   updatedAt: Date;
@@ -95,8 +125,22 @@ const OrderSchema = new Schema<IOrder>(
     total: { type: Number, required: true },
     status: {
       type: String,
-      enum: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'],
-      default: 'Pending',
+      enum: [
+        'ORDER_PLACED',
+        'ORDER_CONFIRMED',
+        'SHIPROCKET_CREATED',
+        'PICKUP_SCHEDULED',
+        'PICKED_UP',
+        'IN_TRANSIT',
+        'OUT_FOR_DELIVERY',
+        'DELIVERED',
+        'Pending',
+        'Processing',
+        'Shipped',
+        'Delivered',
+        'Cancelled',
+      ],
+      default: 'ORDER_PLACED',
     },
     trackingNumber: { type: String },
     trackingHistory: [
@@ -106,6 +150,25 @@ const OrderSchema = new Schema<IOrder>(
         timestamp: { type: Date, default: Date.now },
       },
     ],
+    shiprocket: {
+      shiprocketOrderId: String,
+      shipmentId: String,
+      awbCode: String,
+      courierName: String,
+      currentStatus: String,
+      trackingUrl: String,
+      etd: String,
+      pickupScheduledDate: String,
+      pickupTokenNumber: String,
+      activities: [
+        {
+          date: String,
+          status: String,
+          activity: String,
+          location: String,
+        },
+      ],
+    },
     notes: { type: String },
   },
   {

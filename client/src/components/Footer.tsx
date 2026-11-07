@@ -51,7 +51,7 @@ export const Footer: React.FC = () => {
       {/* ---------- Background: blurred aqua mesh ---------- */}
       <div
         className="absolute inset-0 -z-30"
-        style={{ background: 'linear-gradient(135deg, #0A6A76 0%, #0E8C99 48%, #0A6F7C 100%)' }}
+        style={{ background: 'linear-gradient(135deg, #0f969c 0%, #0f969c 48%, #0f969c 100%)' }}
         aria-hidden="true"
       />
       {/* Light blobs (kept soft + away from the text columns) */}
@@ -220,18 +220,22 @@ export const Footer: React.FC = () => {
 
         {/* Bottom Bar: Copyright & Policies */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-[#BFEDEA] gap-4">
-          <p>© 2026 Hydra. All rights reserved.</p>
+          <p>© 2026 HYDRA24n. All rights reserved.</p>
           <div className="flex items-center space-x-6 text-[11px]">
-            <Link to="/about" className="hover:text-white transition-colors">
+            <Link to="/privacy" className="hover:text-white transition-colors">
               Privacy Policy
             </Link>
             <span aria-hidden="true">•</span>
-            <Link to="/about" className="hover:text-white transition-colors">
-              Terms & Conditions
+            <Link to="/terms" className="hover:text-white transition-colors">
+              Terms &amp; Conditions
             </Link>
             <span aria-hidden="true">•</span>
-            <Link to="/about" className="hover:text-white transition-colors">
+            <Link to="/shipping" className="hover:text-white transition-colors">
               Shipping Policy
+            </Link>
+            <span aria-hidden="true">•</span>
+            <Link to="/returns" className="hover:text-white transition-colors">
+              Return &amp; Refund Policy
             </Link>
           </div>
         </div>

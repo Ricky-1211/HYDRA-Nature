@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Phone, Mail, MapPin, ArrowRight, CheckCircle2, ChevronDown, ChevronUp } from 'lucide-react';
-import { contactService } from '../services/contactService';
+
+const WEB3FORMS_ACCESS_KEY = 'c4703339-dfac-4280-9bfe-d11f69b2605a';
 
 export const ContactPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -11,38 +12,55 @@ export const ContactPage: React.FC = () => {
     message: '',
   });
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading]         = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage]     = useState('');
 
   // FAQ Accordion
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setSuccessMessage('');
     setErrorMessage('');
 
     try {
-      const res = await contactService.send({
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        subject: formData.subject || 'General Skincare Inquiry',
-        message: formData.message,
+      const form = new FormData();
+      form.append('access_key', WEB3FORMS_ACCESS_KEY);
+      form.append('name',    formData.name);
+      form.append('email',   formData.email);
+      form.append('phone',   formData.phone);
+      form.append('subject', formData.subject || 'General Skincare Inquiry — Hydra');
+      form.append('message', formData.message);
+      // Optional: bot-trap honeypot (Web3Forms built-in support)
+      form.append('botcheck', '');
+
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: form,
       });
 
-      setSuccessMessage(res.message || 'Thank you! Your inquiry has been sent to our skincare experts.');
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        subject: '',
-        message: '',
-      });
-    } catch (err: any) {
-      setErrorMessage(err.message || 'Failed to send message. Please try again.');
+      const data = await response.json();
+
+      if (data.success) {
+        setSuccessMessage(
+          'Thank you! Your message has been sent. Our skincare experts will reply within 24 hours.'
+        );
+        setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+      } else {
+        setErrorMessage(
+          data.message || 'Submission failed. Please check your details and try again.'
+        );
+      }
+    } catch {
+      setErrorMessage('Network error — please check your connection and try again.');
     } finally {
       setLoading(false);
     }
@@ -55,7 +73,7 @@ export const ContactPage: React.FC = () => {
     },
     {
       q: 'How long does express shipping take across India?',
-      a: 'Orders placed before 2 PM IST are dispatched on the same business day. Delivery takes 2-4 business days for major metro cities and 4-6 days for non-metro destinations.',
+      a: 'Orders placed before 2 PM IST are dispatched on the same business day. Delivery takes 2–4 business days for major metro cities and 4–6 days for non-metro destinations.',
     },
     {
       q: 'Can I use Hydra Glow Serum with Hydra Sunscreen Gel together?',
@@ -69,14 +87,15 @@ export const ContactPage: React.FC = () => {
 
   return (
     <div className="w-full bg-[#FAF8F5] pb-24">
-      {/* 1. CONTACT MAIN SECTION (Pixel-matched from reference Image 1) */}
+      {/* ── CONTACT MAIN SECTION ──────────────────────────────────────── */}
       <section className="py-14 sm:py-20 relative overflow-hidden">
-        {/* Droplet Background Glow */}
+        {/* Soft background glow */}
         <div className="absolute right-0 top-0 w-96 h-96 bg-[#EAF1EB] rounded-full blur-3xl opacity-60 pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="bg-white rounded-3xl p-8 sm:p-14 border border-[#EDE8E1] shadow-xl grid grid-cols-1 lg:grid-cols-12 gap-12">
-            {/* Left Column: Business Info */}
+
+            {/* ── Left: Business Info ───────────────────────────────── */}
             <div className="lg:col-span-5 space-y-6">
               <div>
                 <span className="text-xs font-semibold uppercase tracking-widest text-[#3F6352]">
@@ -91,7 +110,7 @@ export const ContactPage: React.FC = () => {
                 </p>
               </div>
 
-              {/* Coordinates Cards */}
+              {/* Contact cards */}
               <div className="space-y-4 pt-2">
                 <div className="flex items-center gap-4 p-4 rounded-2xl bg-[#FAF8F5] border border-[#EDE8E1]">
                   <div className="w-10 h-10 rounded-xl bg-[#EAF1EB] text-[#13382B] flex items-center justify-center flex-shrink-0">
@@ -118,36 +137,43 @@ export const ContactPage: React.FC = () => {
                     <MapPin className="w-4 h-4" />
                   </div>
                   <div>
-                    <p className="text-[11px] text-gray-400 uppercase font-semibold">Headquarters & Labs</p>
+                    <p className="text-[11px] text-gray-400 uppercase font-semibold">Headquarters &amp; Labs</p>
                     <p className="text-xs sm:text-sm font-bold text-[#13382B]">Bhubaneswar, Odisha, India</p>
                   </div>
                 </div>
               </div>
 
-              {/* Response Time Guarantee */}
+              {/* Response time badge */}
               <div className="p-4 rounded-xl bg-[#EAF1EB] text-xs text-[#2E6B48] flex items-center gap-2 font-medium">
                 <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
                 <span>Our advisors reply within 24 business hours.</span>
               </div>
             </div>
 
-            {/* Right Column: Working Contact Form */}
+            {/* ── Right: Web3Forms Contact Form ────────────────────── */}
             <div className="lg:col-span-7 bg-[#FAF8F5] p-6 sm:p-10 rounded-2xl border border-[#EDE8E1] flex flex-col justify-between">
               <form onSubmit={handleSubmit} className="space-y-4">
+
+                {/* Honeypot — hidden from humans, traps bots */}
+                <input type="checkbox" name="botcheck" className="hidden" aria-hidden="true" />
+
+                {/* Name */}
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1">
                     Your Name *
                   </label>
                   <input
                     type="text"
+                    name="name"
                     required
                     placeholder="e.g. Sneha Patel"
                     value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-4 py-2.5 text-xs bg-white border border-[#EDE8E1] rounded-xl focus:outline-none focus:border-[#13382B]"
+                    onChange={handleChange}
+                    className="w-full px-4 py-2.5 text-xs bg-white border border-[#EDE8E1] rounded-xl focus:outline-none focus:border-[#13382B] transition-colors"
                   />
                 </div>
 
+                {/* Email + Phone */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-semibold text-gray-700 mb-1">
@@ -155,11 +181,12 @@ export const ContactPage: React.FC = () => {
                     </label>
                     <input
                       type="email"
+                      name="email"
                       required
                       placeholder="e.g. sneha@example.com"
                       value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full px-4 py-2.5 text-xs bg-white border border-[#EDE8E1] rounded-xl focus:outline-none focus:border-[#13382B]"
+                      onChange={handleChange}
+                      className="w-full px-4 py-2.5 text-xs bg-white border border-[#EDE8E1] rounded-xl focus:outline-none focus:border-[#13382B] transition-colors"
                     />
                   </div>
                   <div>
@@ -168,69 +195,92 @@ export const ContactPage: React.FC = () => {
                     </label>
                     <input
                       type="tel"
+                      name="phone"
                       placeholder="e.g. +91 98765 00000"
                       value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full px-4 py-2.5 text-xs bg-white border border-[#EDE8E1] rounded-xl focus:outline-none focus:border-[#13382B]"
+                      onChange={handleChange}
+                      className="w-full px-4 py-2.5 text-xs bg-white border border-[#EDE8E1] rounded-xl focus:outline-none focus:border-[#13382B] transition-colors"
                     />
                   </div>
                 </div>
 
+                {/* Subject */}
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1">
                     Subject / Concern *
                   </label>
                   <input
                     type="text"
+                    name="subject"
                     required
                     placeholder="e.g. Skincare routine recommendation for dry skin"
                     value={formData.subject}
-                    onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                    className="w-full px-4 py-2.5 text-xs bg-white border border-[#EDE8E1] rounded-xl focus:outline-none focus:border-[#13382B]"
+                    onChange={handleChange}
+                    className="w-full px-4 py-2.5 text-xs bg-white border border-[#EDE8E1] rounded-xl focus:outline-none focus:border-[#13382B] transition-colors"
                   />
                 </div>
 
+                {/* Message */}
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1">
                     Your Message *
                   </label>
                   <textarea
                     rows={4}
+                    name="message"
                     required
                     placeholder="Please write your questions or feedback..."
                     value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="w-full px-4 py-2.5 text-xs bg-white border border-[#EDE8E1] rounded-xl focus:outline-none focus:border-[#13382B]"
+                    onChange={handleChange}
+                    className="w-full px-4 py-2.5 text-xs bg-white border border-[#EDE8E1] rounded-xl focus:outline-none focus:border-[#13382B] transition-colors resize-none"
                   />
                 </div>
 
+                {/* Success alert */}
                 {successMessage && (
-                  <div className="p-3 bg-[#EAF1EB] text-[#2E6B48] rounded-xl text-xs font-medium flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+                  <div className="p-3 bg-[#EAF1EB] text-[#2E6B48] rounded-xl text-xs font-medium flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 flex-shrink-0 mt-0.5" />
                     <span>{successMessage}</span>
                   </div>
                 )}
+
+                {/* Error alert */}
                 {errorMessage && (
                   <div className="p-3 bg-red-50 text-red-600 rounded-xl text-xs font-medium">
                     {errorMessage}
                   </div>
                 )}
 
+                {/* Submit */}
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3.5 bg-[#13382B] text-white rounded-full text-xs font-bold tracking-wider hover:bg-[#1E4D3B] transition-all flex items-center justify-center gap-2 shadow-md disabled:opacity-50"
+                  className="w-full py-3.5 bg-[#13382B] text-white rounded-full text-xs font-bold tracking-wider hover:bg-[#1E4D3B] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   <span>{loading ? 'SENDING INQUIRY...' : 'SEND MESSAGE'}</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  {!loading && <ArrowRight className="w-3.5 h-3.5" />}
                 </button>
+
+                <p className="text-[10px] text-gray-400 text-center">
+                  Powered by{' '}
+                  <a
+                    href="https://web3forms.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline hover:text-[#13382B]"
+                  >
+                    Web3Forms
+                  </a>
+                  {' '}— your message goes directly to our team inbox.
+                </p>
               </form>
             </div>
+
           </div>
         </div>
       </section>
 
-      {/* 2. FREQUENTLY ASKED QUESTIONS ACCORDION */}
+      {/* ── FREQUENTLY ASKED QUESTIONS ────────────────────────────────── */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
         <h2 className="font-serif text-2xl font-bold text-[#13382B] text-center mb-8">
           Frequently Asked Questions
@@ -242,14 +292,15 @@ export const ContactPage: React.FC = () => {
               className="bg-white rounded-2xl border border-[#EDE8E1] overflow-hidden shadow-sm transition-all"
             >
               <button
+                type="button"
                 onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
                 className="w-full px-6 py-4 flex items-center justify-between text-left"
               >
                 <span className="font-serif text-sm font-bold text-[#13382B]">{faq.q}</span>
                 {openFaq === idx ? (
-                  <ChevronUp className="w-4 h-4 text-gray-500" />
+                  <ChevronUp className="w-4 h-4 text-gray-500 flex-shrink-0" />
                 ) : (
-                  <ChevronDown className="w-4 h-4 text-gray-500" />
+                  <ChevronDown className="w-4 h-4 text-gray-500 flex-shrink-0" />
                 )}
               </button>
               {openFaq === idx && (

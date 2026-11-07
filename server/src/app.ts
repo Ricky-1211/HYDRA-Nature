@@ -6,9 +6,13 @@ import rateLimit from 'express-rate-limit';
 import path from 'path';
 import fs from 'fs';
 import { env } from './config/env';
+import { disableConsoleInProduction } from './utils/disableConsole';
 import { connectDB } from './config/db';
 import { ensureAdminUser } from './utils/adminInit';
 import { errorHandler, notFoundHandler } from './middleware/error';
+
+// Override verbose console methods in production mode (preserves console.error for critical crash reports)
+disableConsoleInProduction({ preserveError: true });
 
 
 // Route imports

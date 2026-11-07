@@ -9,7 +9,7 @@ export interface IJobApplication extends Document {
   portfolioUrl?: string;
   resumeUrl: string;
   coverLetter?: string;
-  status: 'Received' | 'Under Review' | 'Shortlisted' | 'Rejected' | 'Hired';
+  status: 'Received' | 'Under Review' | 'Shortlisted' | 'Accepted' | 'Hired' | 'Rejected';
   createdAt: Date;
   updatedAt: Date;
 }
@@ -55,7 +55,7 @@ const JobApplicationSchema = new Schema<IJobApplication>(
     },
     status: {
       type: String,
-      enum: ['Received', 'Under Review', 'Shortlisted', 'Rejected', 'Hired'],
+      enum: ['Received', 'Under Review', 'Shortlisted', 'Accepted', 'Hired', 'Rejected'],
       default: 'Received',
     },
   },

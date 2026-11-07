@@ -1,31 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { adminService } from '../../services/adminService';
-
-interface Customer {
-  _id: string;
-  name: string;
-  email: string;
-  phone?: string;
-  role: string;
-  isActive: boolean;
-  createdAt: string;
-  ordersCount?: number;
-  totalSpent?: number;
-}
+import { adminService, AdminCustomer } from '../../services/adminService';
 
 const AdminCustomersPage: React.FC = () => {
-  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [customers, setCustomers] = useState<AdminCustomer[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
         setLoading(true);
         const res = await adminService.getCustomers();
-        setCustomers(res.data?.customers || res.customers || []);
+        setCustomers(res.data);
       } catch (err) {
-        console.error(err);
+        console.error('Failed to load customers:', err);
+        setError('Unable to load customers. Please try again.');
       } finally {
         setLoading(false);
       }
@@ -35,7 +25,8 @@ const AdminCustomersPage: React.FC = () => {
 
   const filtered = customers.filter(c =>
     c.name.toLowerCase().includes(search.toLowerCase()) ||
-    c.email.toLowerCase().includes(search.toLowerCase())
+    c.email.toLowerCase().includes(search.toLowerCase()) ||
+    (c.phone || '').toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -57,7 +48,7 @@ const AdminCustomersPage: React.FC = () => {
         </svg>
         <input
           type="text"
-          placeholder="Search by name or email…"
+          placeholder="Search by name, email, or phone…"
           value={search}
           onChange={e => setSearch(e.target.value)}
           className="w-full pl-9 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-hydra-dark"
@@ -69,6 +60,10 @@ const AdminCustomersPage: React.FC = () => {
         {loading ? (
           <div className="flex items-center justify-center h-64">
             <div className="w-8 h-8 border-4 border-hydra-dark border-t-transparent rounded-full animate-spin" />
+          </div>
+        ) : error ? (
+          <div className="flex items-center justify-center h-64 text-red-600">
+            <p>{error}</p>
           </div>
         ) : filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-64 text-hydra-muted">
@@ -82,7 +77,7 @@ const AdminCustomersPage: React.FC = () => {
             <table className="w-full">
               <thead className="bg-hydra-cream">
                 <tr>
-                  {['Customer', 'Email', 'Phone', 'Role', 'Joined', 'Status'].map(h => (
+                  {['Customer', 'Email', 'Phone number'].map(h => (
                     <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-hydra-muted uppercase tracking-wide">{h}</th>
                   ))}
                 </tr>
@@ -100,23 +95,6 @@ const AdminCustomersPage: React.FC = () => {
                     </td>
                     <td className="px-4 py-3 text-sm text-hydra-muted">{customer.email}</td>
                     <td className="px-4 py-3 text-sm text-hydra-muted">{customer.phone || '—'}</td>
-                    <td className="px-4 py-3">
-                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium capitalize ${
-                        customer.role === 'admin' ? 'bg-purple-100 text-purple-700' : 'bg-green-100 text-green-700'
-                      }`}>
-                        {customer.role}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-sm text-hydra-muted">
-                      {new Date(customer.createdAt).toLocaleDateString('en-IN')}
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                        customer.isActive !== false ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-                      }`}>
-                        {customer.isActive !== false ? 'Active' : 'Inactive'}
-                      </span>
-                    </td>
                   </tr>
                 ))}
               </tbody>

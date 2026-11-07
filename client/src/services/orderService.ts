@@ -19,6 +19,15 @@ export const orderService = {
     return res.data;
   },
 
+  createCODOrder: async (data: {
+    items: CartItem[];
+    shippingAddress: Address;
+    couponCode?: string;
+  }): Promise<{ success: boolean; data: Order; message: string }> => {
+    const res = await api.post('/orders/cod', data);
+    return res.data;
+  },
+
   getMyOrders: async (): Promise<Order[]> => {
     const res = await api.get('/orders/my-orders');
     return res.data.data;
@@ -37,5 +46,20 @@ export const orderService = {
   updateOrderStatus: async (id: string, data: { status: string; trackingNumber?: string; note?: string }) => {
     const res = await api.put(`/orders/${id}/status`, data);
     return res.data;
+  },
+
+  getShiprocketTracking: async (id: string) => {
+    const res = await api.get(`/orders/${id}/shiprocket/track`);
+    return res.data.data;
+  },
+
+  createShiprocketOrder: async (id: string) => {
+    const res = await api.post(`/orders/${id}/shiprocket/create`);
+    return res.data;
+  },
+
+  getInvoiceUrl: (id: string, autoPrint = false) => {
+    const base = import.meta.env.VITE_API_BASE_URL || '/api';
+    return `${base}/orders/${id}/invoice${autoPrint ? '?print=true' : ''}`;
   },
 };

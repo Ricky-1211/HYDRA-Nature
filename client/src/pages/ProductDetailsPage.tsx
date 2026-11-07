@@ -14,6 +14,8 @@ import {
   ChevronUp,
   Sparkles,
   ArrowRight,
+  Trash2,
+  Clock,
 } from 'lucide-react';
 import { productService } from '../services/productService';
 import { reviewService } from '../services/reviewService';
@@ -32,7 +34,7 @@ export const ProductDetailsPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const { isAuthenticated } = useAppSelector((state) => state.auth);
+  const { isAuthenticated, user } = useAppSelector((state) => state.auth);
   const wishlistItems = useAppSelector((state) => state.wishlist.items);
 
   const [product, setProduct] = useState<Product | null>(null);
@@ -54,6 +56,7 @@ export const ProductDetailsPage: React.FC = () => {
   const [reviewComment, setReviewComment] = useState('');
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
   const [reviewMessage, setReviewMessage] = useState('');
+  const [deletingReviewId, setDeletingReviewId] = useState<string | null>(null);
 
   const isInWishlist = product ? wishlistItems.some((i) => i._id === product._id) : false;
 
@@ -163,6 +166,27 @@ export const ProductDetailsPage: React.FC = () => {
     navigate('/checkout');
   };
 
+  const userExistingReview = user
+    ? reviews.find(
+        (r) =>
+          r.user?._id === user._id ||
+          (user.email && (r.user as any)?.email === user.email)
+      )
+    : null;
+
+  const handleOpenReviewForm = () => {
+    if (!isAuthenticated) {
+      navigate('/auth');
+      return;
+    }
+    if (userExistingReview) {
+      setReviewRating(userExistingReview.rating || 5);
+      setReviewTitle(userExistingReview.title || '');
+      setReviewComment(userExistingReview.comment || '');
+    }
+    setShowReviewForm(!showReviewForm);
+  };
+
   const handleReviewSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isAuthenticated) {
@@ -174,13 +198,16 @@ export const ProductDetailsPage: React.FC = () => {
     setReviewMessage('');
 
     try {
-      await reviewService.create(product._id, {
+      const res = await reviewService.create(product._id, {
         rating: reviewRating,
         title: reviewTitle,
         comment: reviewComment,
       });
 
-      setReviewMessage('Thank you for sharing your experience! Your review is published.');
+      setReviewMessage(
+        res.message ||
+          'Thank you for sharing your experience! Your review has been submitted and is pending administrator approval before appearing publicly.'
+      );
       setReviewTitle('');
       setReviewComment('');
       setShowReviewForm(false);
@@ -192,6 +219,25 @@ export const ProductDetailsPage: React.FC = () => {
       setReviewMessage(err.message || 'Failed to submit review');
     } finally {
       setReviewSubmitting(false);
+    }
+  };
+
+  const handleDeleteReview = async (reviewId: string) => {
+    if (!window.confirm('Are you sure you want to delete this review?')) return;
+    try {
+      setDeletingReviewId(reviewId);
+      await reviewService.delete(reviewId);
+      setReviews((prev) => prev.filter((r) => r._id !== reviewId));
+      if (product) {
+        setProduct({
+          ...product,
+          reviewCount: Math.max(0, (product.reviewCount || 1) - 1),
+        });
+      }
+    } catch (err: any) {
+      alert(err.message || 'Failed to delete review');
+    } finally {
+      setDeletingReviewId(null);
     }
   };
 

@@ -2,9 +2,9 @@ import { api } from './api';
 import { Career, JobApplication } from '../types';
 
 export const careerService = {
-  getAll: async (params?: { department?: string }): Promise<Career[]> => {
+  getAll: async (params?: { department?: string; all?: boolean }): Promise<Career[]> => {
     const res = await api.get('/careers', { params });
-    return res.data.data;
+    return res.data?.data || res.data || [];
   },
 
   getCareers: async (params?: Record<string, any>): Promise<any> => {
@@ -14,7 +14,23 @@ export const careerService = {
 
   getBySlug: async (slug: string): Promise<Career> => {
     const res = await api.get(`/careers/${slug}`);
-    return res.data.data;
+    return res.data?.data || res.data;
+  },
+
+  uploadResume: async (
+    file: File
+  ): Promise<{
+    success: boolean;
+    resumeUrl: string;
+    relativeUrl: string;
+    filename: string;
+    originalName: string;
+    size: number;
+  }> => {
+    const formData = new FormData();
+    formData.append('resume', file);
+    const res = await api.post('/careers/upload-resume', formData);
+    return res.data;
   },
 
   apply: async (data: {
@@ -71,6 +87,11 @@ export const careerService = {
 
   updateApplicationStatus: async (id: string, status: string) => {
     const res = await api.put(`/careers/admin/applications/${id}`, { status });
+    return res.data;
+  },
+
+  deleteApplication: async (id: string) => {
+    const res = await api.delete(`/careers/admin/applications/${id}`);
     return res.data;
   },
 };

@@ -1,6 +1,14 @@
 import { api } from './api';
 import { User, Order, Product } from '../types';
 
+export type AdminCustomer = Pick<User, '_id' | 'name' | 'email' | 'phone'>;
+
+interface AdminCustomersResponse {
+  success: boolean;
+  count: number;
+  data: AdminCustomer[];
+}
+
 export interface DashboardAnalytics {
   stats: {
     totalRevenue: number;
@@ -32,7 +40,7 @@ export const adminService = {
     return res.data.data;
   },
 
-  getCustomers: async (): Promise<any> => {
+  getCustomers: async (): Promise<AdminCustomersResponse> => {
     const res = await api.get('/admin/customers');
     return res.data;
   },
@@ -47,8 +55,13 @@ export const adminService = {
     return res.data;
   },
 
-  getReviews: async (): Promise<any> => {
-    const res = await api.get('/reviews/admin');
+  getReviews: async (params?: Record<string, any>): Promise<any> => {
+    const res = await api.get('/reviews/admin', { params });
+    return res.data;
+  },
+
+  approveReview: async (id: string, isApproved?: boolean): Promise<any> => {
+    const res = await api.patch(`/reviews/${id}/approve`, { isApproved });
     return res.data;
   },
 

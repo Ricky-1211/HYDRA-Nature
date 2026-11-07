@@ -20,6 +20,7 @@ export interface Address {
   country: string;
   phone: string;
   isDefault?: boolean;
+  label?: string;
 }
 
 export interface Product {
@@ -86,15 +87,45 @@ export interface Order {
   subtotal: number;
   shippingFee: number;
   discount: number;
+  couponCode?: string;
   tax: number;
   total: number;
-  status: 'Pending' | 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled';
+  status:
+    | 'ORDER_PLACED'
+    | 'ORDER_CONFIRMED'
+    | 'SHIPROCKET_CREATED'
+    | 'PICKUP_SCHEDULED'
+    | 'PICKED_UP'
+    | 'IN_TRANSIT'
+    | 'OUT_FOR_DELIVERY'
+    | 'DELIVERED'
+    | 'Pending'
+    | 'Processing'
+    | 'Shipped'
+    | 'Delivered'
+    | 'Cancelled'
+    | string;
   trackingNumber?: string;
   trackingHistory?: {
     status: string;
     message: string;
     timestamp: string;
   }[];
+  shiprocket?: {
+    shiprocketOrderId?: string;
+    shipmentId?: string;
+    awbCode?: string;
+    courierName?: string;
+    currentStatus?: string;
+    trackingUrl?: string;
+    etd?: string;
+    activities?: {
+      date: string;
+      status: string;
+      activity: string;
+      location: string;
+    }[];
+  };
   notes?: string;
   createdAt: string;
   updatedAt: string;
@@ -102,16 +133,18 @@ export interface Order {
 
 export interface Review {
   _id: string;
-  product: string;
+  product: string | { _id: string; name: string; images?: string[]; category?: string; slug?: string };
   user: {
     _id: string;
     name: string;
+    email?: string;
     avatar?: string;
   };
   rating: number;
   title: string;
   comment: string;
   verifiedPurchase: boolean;
+  isApproved: boolean;
   createdAt: string;
 }
 
@@ -147,18 +180,20 @@ export interface Career {
   benefits: string[];
   isActive: boolean;
   createdAt: string;
+  applicationsCount?: number;
 }
 
 export interface JobApplication {
   _id: string;
-  career: string | Career;
+  career: string | { _id: string; title: string; department?: string; location?: string };
+  jobTitle: string;
   fullName: string;
   email: string;
   phone: string;
   portfolioUrl?: string;
   resumeUrl: string;
   coverLetter?: string;
-  status: 'Received' | 'Under Review' | 'Shortlisted' | 'Rejected' | 'Hired';
+  status: 'Received' | 'Under Review' | 'Shortlisted' | 'Accepted' | 'Hired' | 'Rejected';
   createdAt: string;
 }
 

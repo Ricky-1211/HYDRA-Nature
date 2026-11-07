@@ -17,4 +17,8 @@ export const env = {
   CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME || 'hydra-demo',
   CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY || '123456789012345',
   CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET || 'sample_cloudinary_secret_key',
+  SHIPROCKET_EMAIL: process.env.SHIPROCKET_EMAIL || '',
+  SHIPROCKET_PASSWORD: process.env.SHIPROCKET_PASSWORD || '',
+  SHIPROCKET_BASE_URL: process.env.SHIPROCKET_BASE_URL || 'https://apiv2.shiprocket.in/v1/external',
+  SHIPROCKET_WEBHOOK_SECRET: process.env.SHIPROCKET_WEBHOOK_SECRET || '',
 };

@@ -3,8 +3,12 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [react()],
+  esbuild: {
+    // Drop non-error console statements in production builds to reduce bundle size and prevent leakages
+    pure: mode === 'production' ? ['console.log', 'console.debug', 'console.info', 'console.warn'] : [],
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -23,4 +27,4 @@ export default defineConfig({
       },
     },
   },
-});
+}));

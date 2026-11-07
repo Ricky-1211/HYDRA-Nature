@@ -8,6 +8,10 @@ import {
   changePassword,
   forgotPassword,
   resetPassword,
+  addAddress,
+  updateAddress,
+  deleteAddress,
+  setDefaultAddress,
 } from '../controllers/authController';
 import { protect } from '../middleware/auth';
 
@@ -21,5 +25,11 @@ router.put('/profile', protect, updateProfile);
 router.put('/change-password', protect, changePassword);
 router.post('/forgot-password', forgotPassword);
 router.post('/reset-password', resetPassword);
+
+// Address Management routes
+router.post('/addresses', protect, addAddress);
+router.put('/addresses/:addressId', protect, updateAddress);
+router.delete('/addresses/:addressId', protect, deleteAddress);
+router.patch('/addresses/:addressId/primary', protect, setDefaultAddress);
 
 export default router;

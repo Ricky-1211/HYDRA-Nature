@@ -8,6 +8,12 @@ import { checkAuth } from './store/authSlice';
 import { RootLayout } from './layouts/RootLayout';
 import { AdminLayout } from './layouts/AdminLayout';
 
+// Policy Pages
+import { PrivacyPolicy } from './components/PrivacyPolicy';
+import { TermsConditions } from './components/TermsConditions';
+import { ShippingPolicy } from './components/ShippingPolicy';
+import { ReturnPolicy } from './components/ReturnPolicy';
+
 // Public Pages
 import { HomePage } from './pages/HomePage';
 import { ShopPage } from './pages/ShopPage';
@@ -85,6 +91,10 @@ const App: React.FC = () => {
           <Route path="/career" element={<CareerPage />} />
           <Route path="/auth" element={<AuthPage />} />
           <Route path="/cart" element={<CartPage />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<TermsConditions />} />
+          <Route path="/shipping" element={<ShippingPolicy />} />
+          <Route path="/returns" element={<ReturnPolicy />} />
 
           {/* ─── Protected customer routes ─── */}
           <Route element={<ProtectedRoute />}>

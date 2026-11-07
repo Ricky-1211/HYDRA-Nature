@@ -23,10 +23,9 @@ const loadSavedCart = (): CartItem[] => {
 
 const calculateTotals = (items: CartItem[], discount: number = 0) => {
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const shippingFee = subtotal >= 999 || subtotal === 0 ? 0 : 99;
-  const taxableAmount = Math.max(0, subtotal - discount);
-  const tax = Math.round(taxableAmount * 0.05); // 5% GST
-  const total = Math.max(0, subtotal - discount + shippingFee + tax);
+  const shippingFee = 0; // Free express shipping on all orders
+  const tax = 0; // GST reduced / included in formulation prices
+  const total = Math.max(0, subtotal - discount);
 
   return { subtotal, shippingFee, tax, total };
 };

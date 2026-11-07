@@ -142,6 +142,186 @@ export const updateProfile = async (req: AuthRequest, res: Response, next: NextF
   }
 };
 
+// Add new address (Enforce max 4 addresses: 1 Primary + 3 Extra)
+export const addAddress = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const { fullName, street, apartment, city, state, postalCode, country, phone, isDefault, label } = req.body;
+
+    if (!fullName || !street || !city || !state || !postalCode || !phone) {
+      return next(new ApiError('Please provide all required address fields', 400));
+    }
+
+    const user = await User.findById(req.user?._id);
+    if (!user) {
+      return next(new ApiError('User not found', 404));
+    }
+
+    if (!user.addresses) {
+      user.addresses = [];
+    }
+
+    if (user.addresses.length >= 4) {
+      return next(
+        new ApiError(
+          'Address limit reached. You can save up to 4 addresses (1 Primary + 3 Extra). Please remove an existing address first.',
+          400
+        )
+      );
+    }
+
+    const shouldBeDefault = user.addresses.length === 0 || !!isDefault;
+
+    if (shouldBeDefault) {
+      user.addresses.forEach((addr) => {
+        addr.isDefault = false;
+      });
+    }
+
+    user.addresses.push({
+      fullName,
+      street,
+      apartment,
+      city,
+      state,
+      postalCode,
+      country: country || 'India',
+      phone,
+      isDefault: shouldBeDefault,
+      label: label || 'Home',
+    });
+
+    await user.save();
+
+    res.status(201).json({
+      success: true,
+      message: 'Address added successfully',
+      data: {
+        addresses: user.addresses,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Delete an address
+export const deleteAddress = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const { addressId } = req.params;
+    const user = await User.findById(req.user?._id);
+    if (!user) {
+      return next(new ApiError('User not found', 404));
+    }
+
+    const addressIndex = user.addresses.findIndex((addr: any) => addr._id?.toString() === addressId);
+    if (addressIndex === -1) {
+      return next(new ApiError('Address not found', 404));
+    }
+
+    const wasDefault = user.addresses[addressIndex].isDefault;
+    user.addresses.splice(addressIndex, 1);
+
+    if (wasDefault && user.addresses.length > 0) {
+      user.addresses[0].isDefault = true;
+    }
+
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Address deleted successfully',
+      data: {
+        addresses: user.addresses,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Set Address as Primary / Default
+export const setDefaultAddress = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const { addressId } = req.params;
+    const user = await User.findById(req.user?._id);
+    if (!user) {
+      return next(new ApiError('User not found', 404));
+    }
+
+    let found = false;
+    user.addresses.forEach((addr: any) => {
+      if (addr._id?.toString() === addressId) {
+        addr.isDefault = true;
+        found = true;
+      } else {
+        addr.isDefault = false;
+      }
+    });
+
+    if (!found) {
+      return next(new ApiError('Address not found', 404));
+    }
+
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Primary address updated successfully',
+      data: {
+        addresses: user.addresses,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Update an existing address
+export const updateAddress = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const { addressId } = req.params;
+    const { fullName, street, apartment, city, state, postalCode, country, phone, isDefault, label } = req.body;
+
+    const user = await User.findById(req.user?._id);
+    if (!user) {
+      return next(new ApiError('User not found', 404));
+    }
+
+    const address = user.addresses.find((addr: any) => addr._id?.toString() === addressId);
+    if (!address) {
+      return next(new ApiError('Address not found', 404));
+    }
+
+    if (fullName) address.fullName = fullName;
+    if (street) address.street = street;
+    if (apartment !== undefined) address.apartment = apartment;
+    if (city) address.city = city;
+    if (state) address.state = state;
+    if (postalCode) address.postalCode = postalCode;
+    if (country) address.country = country;
+    if (phone) address.phone = phone;
+    if (label) address.label = label;
+
+    if (isDefault) {
+      user.addresses.forEach((addr: any) => {
+        addr.isDefault = addr._id?.toString() === addressId;
+      });
+    }
+
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Address updated successfully',
+      data: {
+        addresses: user.addresses,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // Change Password
 export const changePassword = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {

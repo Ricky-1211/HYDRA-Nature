@@ -2,6 +2,7 @@ import mongoose, { Document, Schema } from 'mongoose';
 import bcrypt from 'bcryptjs';
 
 export interface IAddress {
+  _id?: any;
   fullName: string;
   street: string;
   apartment?: string;
@@ -11,6 +12,7 @@ export interface IAddress {
   country: string;
   phone: string;
   isDefault?: boolean;
+  label?: string;
 }
 
 export interface IUser extends Document {
@@ -39,6 +41,7 @@ const AddressSchema = new Schema<IAddress>({
   country: { type: String, default: 'India' },
   phone: { type: String, required: true },
   isDefault: { type: Boolean, default: false },
+  label: { type: String, default: 'Home' },
 });
 
 const UserSchema = new Schema<IUser>(

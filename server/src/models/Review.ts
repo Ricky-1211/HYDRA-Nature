@@ -7,6 +7,7 @@ export interface IReview extends Document {
   title: string;
   comment: string;
   verifiedPurchase: boolean;
+  isApproved: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -42,12 +43,16 @@ const ReviewSchema = new Schema<IReview>(
       type: Boolean,
       default: true,
     },
+    isApproved: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
   }
 );
 
-ReviewSchema.index({ product: 1, createdAt: -1 });
+ReviewSchema.index({ product: 1, isApproved: 1, createdAt: -1 });
 
 export const Review = mongoose.model<IReview>('Review', ReviewSchema);

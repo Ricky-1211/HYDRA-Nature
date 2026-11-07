@@ -141,30 +141,7 @@ export const AuthPage: React.FC = () => {
               </p>
             </div>
 
-            {/* Quick Demo Credentials for Reviewers & Examiners */}
-            <div className="relative z-10 pt-6 border-t border-[#23503E] space-y-2">
-              <p className="text-[11px] text-[#A2B997] font-semibold uppercase tracking-wider">
-                Instant Demo Credentials:
-              </p>
-              <div className="flex flex-col gap-1.5 text-xs">
-                <button
-                  type="button"
-                  onClick={fillDemoAdmin}
-                  className="px-3 py-1.5 rounded-lg bg-[#1C4737] hover:bg-[#2A5A46] text-left text-[#C5A880] transition-colors flex items-center justify-between font-mono text-[11px]"
-                >
-                  <span>Admin: admin@hydra.com</span>
-                  <span className="text-[10px] text-white bg-[#13382B] px-1.5 py-0.5 rounded">Fill</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={fillDemoCustomer}
-                  className="px-3 py-1.5 rounded-lg bg-[#1C4737] hover:bg-[#2A5A46] text-left text-[#A2B997] transition-colors flex items-center justify-between font-mono text-[11px]"
-                >
-                  <span>Customer: customer@hydra.com</span>
-                  <span className="text-[10px] text-white bg-[#13382B] px-1.5 py-0.5 rounded">Fill</span>
-                </button>
-              </div>
-            </div>
+     
 
             {/* Switch Mode Button */}
             <div className="relative z-10 pt-6">
