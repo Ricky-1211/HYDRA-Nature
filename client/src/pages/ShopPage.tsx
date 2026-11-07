@@ -174,7 +174,7 @@ export const ShopPage: React.FC = () => {
 
           <div className="w-48 sm:w-64 h-36 sm:h-44 rounded-2xl overflow-hidden shadow-lg border-2 border-white flex-shrink-0">
             <img
-              src="/public/images/home/productpage.png"
+              src="/images/home/productpage.png"
               alt="Hydra Skincare Formulation"
               className="w-full h-full object-cover"
             />
