@@ -82,6 +82,16 @@ app.use(
   })
 );
 
+// Root endpoint
+app.get('/', (req: Request, res: Response) => {
+  res.status(200).json({
+    success: true,
+    message: 'HYDRA Skincare API is running',
+    health: '/health',
+    api: '/api',
+  });
+});
+
 // Health check endpoint
 app.get('/health', (req: Request, res: Response) => {
   res.status(200).json({
