@@ -42,6 +42,9 @@ const allowedOrigins = [
   ...env.CLIENT_URL.split(',').map((url) => url.trim().replace(/\/+$/, '')).filter(Boolean),
   'http://localhost:5173',
   'http://127.0.0.1:5173',
+  'https://hydra-nature.onrender.com',
+  'https://hydra24n.com/',
+  'https://hydra-nature.vercel.app/',
 ];
 
 app.use(
