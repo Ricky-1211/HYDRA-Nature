@@ -1,6 +1,22 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, CheckCircle2, Instagram, Youtube, Linkedin } from 'lucide-react';
+import {
+  ArrowRight,
+  CheckCircle2,
+  Instagram,
+  Youtube,
+  Linkedin,
+  Truck,
+  ShieldCheck,
+  Headphones,
+  BadgeCheck,
+  Phone,
+  Mail,
+  Smartphone,
+  Landmark,
+  Banknote,
+  QrCode,
+} from 'lucide-react';
 
 import { newsletterService } from '../services/newsletterService';
 
@@ -19,6 +35,20 @@ import { newsletterService } from '../services/newsletterService';
   muted      #BFEDEA  (small print)
   accent     #FDE8B5  (warm sand accent, keeps the Hydra gold feel)
 */
+
+const trustItems = [
+  { icon: Truck, title: 'Shipping across', subtitle: 'India' },
+  { icon: ShieldCheck, title: '100% secure', subtitle: 'Checkout' },
+  { icon: Headphones, title: 'Dedicated', subtitle: 'Customer support' },
+  { icon: BadgeCheck, title: 'Genuine', subtitle: 'Verified reviews' },
+];
+
+const paymentMethods = [
+  { icon: Smartphone, label: 'UPI', gradient: 'from-[#FF7A1A] via-[#F59E0B] to-[#16A34A]' },
+  { icon: Landmark, label: 'Net Banking', gradient: 'from-[#2563EB] to-[#6D28D9]' },
+  { icon: Banknote, label: 'Cash on Delivery', gradient: 'from-[#10B981] to-[#059669]' },
+  { icon: QrCode, label: 'Scan & Pay QR', gradient: 'from-[#EC4899] to-[#8B5CF6]' },
+];
 
 export const Footer: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -74,10 +104,26 @@ export const Footer: React.FC = () => {
       {/* Contrast overlay: guarantees white text stays readable over the light blobs */}
       <div className="absolute inset-0 -z-10 bg-[#053F49]/35" aria-hidden="true" />
 
-   
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 pb-14 border-b border-white/20">
+        {/* ---------- Trust strip ---------- */}
+        <ul className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 pb-12">
+          {trustItems.map(({ icon: Icon, title, subtitle }) => (
+            <li
+              key={title}
+              className="group flex items-center gap-3 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 px-4 py-4 shadow-[0_8px_30px_-12px_rgba(5,63,73,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/15 hover:border-white/35"
+            >
+              <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#FDE8B5] to-[#F6C977] text-[#053F49] shadow-md transition-transform duration-300 group-hover:scale-105">
+                <Icon className="h-5 w-5" strokeWidth={2} />
+              </span>
+              <span className="leading-tight">
+                <span className="block text-sm font-semibold text-white">{title}</span>
+                <span className="block text-[11px] text-[#D5F3F1]">{subtitle}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 pb-12 border-b border-white/20">
           {/* Brand Info */}
           <div className="lg:col-span-4 space-y-4">
             <Link to="/" className="flex flex-shrink-0 items-center" aria-label="Hydra home">
@@ -218,10 +264,68 @@ export const Footer: React.FC = () => {
           </div>
         </div>
 
+        {/* ---------- Customer care + Payments ---------- */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 py-10 border-b border-white/20">
+          <div className="lg:col-span-5 space-y-4">
+            <h4 className="font-serif text-sm font-semibold text-white tracking-wide">Customer Care</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <a
+                href="tel:+918117969889"
+                className="group flex items-center gap-3 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 px-4 py-3 transition-all hover:bg-white/15 hover:border-white/35"
+              >
+                <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-white text-[#0E8C99] shadow-md transition-transform group-hover:scale-105">
+                  <Phone className="h-4 w-4" />
+                </span>
+                <span className="leading-tight min-w-0">
+                  <span className="block text-[10px] uppercase tracking-[0.14em] text-[#BFEDEA]">Mobile</span>
+                  <span className="block text-sm font-semibold text-white">+91 81179 69889</span>
+                </span>
+              </a>
+              <a
+                href="mailto:care@hydra24n.com"
+                className="group flex items-center gap-3 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 px-4 py-3 transition-all hover:bg-white/15 hover:border-white/35"
+              >
+                <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-white text-[#0E8C99] shadow-md transition-transform group-hover:scale-105">
+                  <Mail className="h-4 w-4" />
+                </span>
+                <span className="leading-tight min-w-0">
+                  <span className="block text-[10px] uppercase tracking-[0.14em] text-[#BFEDEA]">Email</span>
+                  <span className="block text-sm font-semibold text-white truncate">care@hydra24n.com</span>
+                </span>
+              </a>
+            </div>
+          </div>
+
+          <div className="lg:col-span-7 space-y-4">
+            <div className="flex items-center justify-between gap-3">
+              <h4 className="font-serif text-sm font-semibold text-white tracking-wide">We Accept</h4>
+              <span className="flex items-center gap-1.5 text-[11px] text-[#D5F3F1]">
+                <ShieldCheck className="h-3.5 w-3.5 text-[#BFF3D8]" />
+                100% secure payments
+              </span>
+            </div>
+            <ul className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {paymentMethods.map(({ icon: Icon, label, gradient }) => (
+                <li
+                  key={label}
+                  className="group flex items-center gap-2.5 rounded-xl bg-white px-3 py-2.5 shadow-[0_8px_24px_-12px_rgba(5,63,73,0.7)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_28px_-10px_rgba(5,63,73,0.8)]"
+                >
+                  <span
+                    className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br ${gradient} text-white shadow-sm`}
+                  >
+                    <Icon className="h-4 w-4" strokeWidth={2.2} />
+                  </span>
+                  <span className="text-[11px] font-semibold leading-tight text-[#053F49]">{label}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
         {/* Bottom Bar: Copyright & Policies */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-[#BFEDEA] gap-4">
+        <div className="pt-8 flex flex-col md:flex-row items-center justify-between text-xs text-[#BFEDEA] gap-4">
           <p>© 2026 HYDRA24n. All rights reserved.</p>
-          <div className="flex items-center space-x-6 text-[11px]">
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[11px]">
             <Link to="/privacy" className="hover:text-white transition-colors">
               Privacy Policy
             </Link>

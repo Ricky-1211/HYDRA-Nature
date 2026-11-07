@@ -118,7 +118,7 @@ export const ContactPage: React.FC = () => {
                   </div>
                   <div>
                     <p className="text-[11px] text-gray-400 uppercase font-semibold">Phone Support</p>
-                    <p className="text-xs sm:text-sm font-bold text-[#13382B]">+91 98765 43210</p>
+                    <p className="text-xs sm:text-sm font-bold text-[#13382B]">+91 81179 69889</p>
                   </div>
                 </div>
 
@@ -128,17 +128,37 @@ export const ContactPage: React.FC = () => {
                   </div>
                   <div>
                     <p className="text-[11px] text-gray-400 uppercase font-semibold">Customer Care</p>
-                    <p className="text-xs sm:text-sm font-bold text-[#13382B]">hello@hydra.com</p>
+                    <p className="text-xs sm:text-sm font-bold text-[#13382B]"> care@hydra24n.com</p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-4 p-4 rounded-2xl bg-[#FAF8F5] border border-[#EDE8E1]">
+                <div className="flex items-start gap-4 p-4 rounded-2xl bg-[#FAF8F5] border border-[#EDE8E1]">
                   <div className="w-10 h-10 rounded-xl bg-[#EAF1EB] text-[#13382B] flex items-center justify-center flex-shrink-0">
                     <MapPin className="w-4 h-4" />
                   </div>
-                  <div>
-                    <p className="text-[11px] text-gray-400 uppercase font-semibold">Headquarters &amp; Labs</p>
-                    <p className="text-xs sm:text-sm font-bold text-[#13382B]">Bhubaneswar, Odisha, India</p>
+                  <div className="space-y-3">
+                    <div>
+                      <p className="text-[11px] text-gray-400 uppercase font-semibold">Corporate Office</p>
+                      <a
+                        href="https://www.google.com/maps/search/?api=1&query=Shop%20no%203%2C%20Sector%20-%2030E%2C%20Near%20Gazania%20Banquet%2C%20Rohtak%2C%20HR%20-%20124001%2C%20India"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs sm:text-sm font-bold text-[#13382B] hover:underline"
+                      >
+                        Shop no 3, Sector - 30E, Near Gazania Banquet, Rohtak, HR - 124001 (India)
+                      </a>
+                    </div>
+                    <div>
+                      <p className="text-[11px] text-gray-400 uppercase font-semibold">Branch Office</p>
+                      <a
+                        href="https://www.google.com/maps/search/?api=1&query=Plot%20no.%204270%2C%20Ghatikia%2C%20Kalinga%20nagar%2C%20Khorda%2C%20Odisha%20-%20751029"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs sm:text-sm font-bold text-[#13382B] hover:underline"
+                      >
+                        Plot no. 4270, Ghatikia, Kalinga nagar, Khorda, Odisha - 751029
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -261,18 +281,7 @@ export const ContactPage: React.FC = () => {
                   {!loading && <ArrowRight className="w-3.5 h-3.5" />}
                 </button>
 
-                <p className="text-[10px] text-gray-400 text-center">
-                  Powered by{' '}
-                  <a
-                    href="https://web3forms.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="underline hover:text-[#13382B]"
-                  >
-                    Web3Forms
-                  </a>
-                  {' '}— your message goes directly to our team inbox.
-                </p>
+           
               </form>
             </div>
 

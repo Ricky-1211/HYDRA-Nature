@@ -12,6 +12,7 @@ import {
   Sparkles,
   Image as ImageIcon,
   Search,
+  Leaf,
 } from 'lucide-react';
 import {
   NaturalIngredientsIcon,
@@ -167,77 +168,95 @@ export const HomePage: React.FC = () => {
          ------------------------------------------------------------------ */}
       <section className="bg-[#FAF8F5] py-10 sm:py-14 lg:py-20">
         <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid overflow-hidden bg-[#13382B] lg:grid-cols-[1.08fr_0.92fr]">
-            <div className="flex flex-col justify-center px-6 py-10 text-[#FAF8F5] sm:px-10 sm:py-12 lg:px-14 lg:py-16">
+          <div className="relative isolate overflow-hidden rounded-[28px] bg-[#0B0B0A] shadow-[0_30px_80px_-30px_rgba(19,56,43,0.55)] ring-1 ring-black/5 lg:min-h-[620px]">
+            {/* Image: full-bleed on desktop (subject sits on the right, dark negative space behind the copy) */}
+            <div className="relative aspect-[4/3] w-full sm:aspect-[16/10] lg:absolute lg:inset-0 lg:aspect-auto">
+              <img
+                src="/images/home/care_model.png"
+                alt="Woman enjoying a gentle skincare ritual"
+                className="absolute inset-0 h-full w-full object-cover object-[78%_center] lg:object-right"
+                loading="lazy"
+              />
+              {/* Mobile: fade image into the copy below */}
+              <div
+                className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#0B0B0A] to-transparent lg:hidden"
+                aria-hidden="true"
+              />
+              {/* Desktop: keep the copy side rich and readable */}
+              <div
+                className="pointer-events-none absolute inset-0 hidden bg-gradient-to-r from-[#0B0B0A] via-[#0B0B0A]/70 via-35% to-transparent to-60% lg:block"
+                aria-hidden="true"
+              />
+              <div
+                className="pointer-events-none absolute -left-32 top-1/2 hidden h-[480px] w-[480px] -translate-y-1/2 rounded-full bg-[#13382B]/60 blur-[120px] lg:block"
+                aria-hidden="true"
+              />
+
+            
+            </div>
+
+            {/* Copy */}
+            <div className="relative z-10 flex flex-col justify-center px-6 pb-10 pt-2 text-[#FAF8F5] sm:px-10 sm:pb-12 lg:min-h-[620px] lg:max-w-[560px] lg:px-14 lg:py-16">
               <p className="mb-5 flex items-center gap-3 text-[10px] font-semibold uppercase tracking-[0.24em] text-[#D8C6A7] sm:text-xs">
                 <span className="h-px w-8 bg-[#C5A880]" aria-hidden="true" />
                 The Hydra Difference
               </p>
 
-              <h2 className="max-w-xl font-serif text-4xl font-medium leading-[1.12] tracking-tight sm:text-5xl lg:text-[54px]">
-                Skincare, made simple. <span className="text-[#D8C6A7]">Rooted in nature.</span>
+              <h2 className="font-serif text-4xl font-medium leading-[1.1] tracking-tight sm:text-5xl lg:text-[52px]">
+                Skincare, made simple.{' '}
+                <span className="bg-gradient-to-r from-[#E9D9BC] to-[#C5A880] bg-clip-text italic text-transparent">
+                  Rooted in nature.
+                </span>
               </h2>
 
-              <p className="mt-5 max-w-lg text-sm leading-7 text-[#E1E9E3] sm:text-base">
+              <p className="mt-5 max-w-md text-sm leading-7 text-white/75 sm:text-base">
                 Powered by Nature, Perfected by Science. We bring considered botanical ingredients and
                 thoughtful formulation together for rituals that feel beautifully uncomplicated.
               </p>
 
-              <ul className="mt-8 divide-y divide-white/20 border-y border-white/20">
-                <li className="flex gap-4 py-4">
-                  <span className="pt-0.5 font-serif text-sm text-[#D8C6A7]">01</span>
-                  <div>
-                    <h3 className="text-sm font-semibold text-white">Nature-led ingredients</h3>
-                    <p className="mt-1 text-xs leading-5 text-[#D3DED6]">Botanical ingredients chosen with care.</p>
-                  </div>
-                </li>
-                <li className="flex gap-4 py-4">
-                  <span className="pt-0.5 font-serif text-sm text-[#D8C6A7]">02</span>
-                  <div>
-                    <h3 className="text-sm font-semibold text-white">Thoughtfully tested</h3>
-                    <p className="mt-1 text-xs leading-5 text-[#D3DED6]">
-                      Considered formulas, made with your daily routine in mind.
-                    </p>
-                  </div>
-                </li>
-                <li className="flex gap-4 py-4">
-                  <span className="pt-0.5 font-serif text-sm text-[#D8C6A7]">03</span>
-                  <div>
-                    <h3 className="text-sm font-semibold text-white">Everyday essentials</h3>
-                    <p className="mt-1 text-xs leading-5 text-[#D3DED6]">
-                      A simpler approach to the care you reach for every day.
-                    </p>
-                  </div>
-                </li>
+              <ul className="mt-8 grid gap-3">
+                {[
+                  { icon: Leaf, title: 'Nature-led ingredients', text: 'Botanical ingredients chosen with care.' },
+                  {
+                    icon: ShieldCheck,
+                    title: 'Thoughtfully tested',
+                    text: 'Considered formulas, made with your daily routine in mind.',
+                  },
+                  {
+                    icon: Sparkles,
+                    title: 'Everyday essentials',
+                    text: 'A simpler approach to the care you reach for every day.',
+                  },
+                ].map(({ icon: Icon, title, text }) => (
+                  <li
+                    key={title}
+                    className="flex items-start gap-4 rounded-2xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur-sm transition-colors hover:border-[#C5A880]/40 hover:bg-white/[0.07]"
+                  >
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#C5A880]/15 text-[#D8C6A7] ring-1 ring-[#C5A880]/30">
+                      <Icon className="h-[18px] w-[18px]" aria-hidden="true" />
+                    </span>
+                    <div>
+                      <h3 className="text-sm font-semibold text-white">{title}</h3>
+                      <p className="mt-1 text-xs leading-5 text-white/60">{text}</p>
+                    </div>
+                  </li>
+                ))}
               </ul>
 
               <Link
                 to="/about"
-                className="group mt-8 inline-flex w-fit items-center gap-3 border-b border-[#C5A880] pb-2 text-sm font-semibold text-white transition-colors hover:text-[#D8C6A7] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#D8C6A7]"
+                className="group mt-9 inline-flex w-fit items-center gap-3 rounded-full bg-[#C5A880] px-6 py-3 text-sm font-semibold text-[#13382B] transition-all hover:bg-[#D8C6A7] hover:shadow-[0_10px_30px_-10px_rgba(197,168,128,0.8)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#D8C6A7]"
               >
                 Meet the Hydra difference
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
               </Link>
             </div>
-
-            <div className="relative min-h-[320px] overflow-hidden sm:min-h-[420px] lg:min-h-[620px]">
-              <img
-                src="/images/home/care_model.png"
-                alt="Woman enjoying a gentle skincare ritual"
-                className="absolute inset-0 h-full w-full object-cover object-center"
-                loading="lazy"
-              />
-              <div
-                className="absolute inset-0 bg-gradient-to-t from-[#13382B]/55 via-transparent to-transparent"
-                aria-hidden="true"
-              />
-              <p className="absolute bottom-5 left-5 border-l border-[#D8C6A7] pl-3 text-[10px] font-medium uppercase tracking-[0.2em] text-white sm:bottom-8 sm:left-8 sm:text-xs">
-                Care, considered
-              </p>
-            </div>
           </div>
         </div>
       </section>
+
+
+      
 
       {/* ------------------------------------------------------------------
           3. OUR TOP PICKS
@@ -417,11 +436,11 @@ export const HomePage: React.FC = () => {
                   aria-hidden="true"
                 />
 
-                <div className="relative aspect-[4/3] overflow-hidden rounded-[28px] bg-transparent ring-1 ring-[#C5A880]/40">
+                <div className="relative overflow-hidden rounded-[28px] bg-transparent ring-1 ring-[#C5A880]/40">
                   <img
-                    src="/images/home/night_cream_hero.png"
-                    alt="Hydra 24h Ultra Radiance Night Cream in a gold-capped white jar"
-                    className="h-full w-full object-contain object-center"
+                    src="/images/home/RadianceFaceWash.png"
+                    alt="Hydra 24h Ultra Radiance face wash in a gold-capped white jar"
+                    className="block h-auto w-full max-w-full object-contain object-center"
                     loading="lazy"
                   />
                 </div>
@@ -440,7 +459,7 @@ export const HomePage: React.FC = () => {
             
 
               <h2 className="mt-4 font-serif text-[34px] font-medium leading-[1.1] tracking-tight text-[#13382B] sm:text-5xl lg:text-[54px]">
-                Hydra 24h Ultra Radiance <span className="italic font-normal text-[#2D634C]">Night Cream</span>
+                Hydra 24h Ultra Radiance <span className="italic font-normal text-[#2D634C]">Face Wash</span>
               </h2>
 
               <p className="mt-4 max-w-xl text-sm leading-7 text-[#4F655A] sm:text-base">
@@ -467,10 +486,10 @@ export const HomePage: React.FC = () => {
               {/* CTAs */}
               <div className="mt-8 flex flex-wrap items-center gap-4">
                 <Link
-                  to="/shop?category=Night+Care"
+                  to="/shop?category=Face Care"
                   className="group inline-flex items-center gap-2.5 rounded-full bg-[#13382B] px-8 py-3.5 text-xs font-semibold tracking-wide text-white shadow-lg transition-all hover:bg-[#1A4B3A] sm:text-sm"
                 >
-                  <span>Shop Night Care</span>
+                  <span>Shop</span>
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
                 </Link>
               </div>
